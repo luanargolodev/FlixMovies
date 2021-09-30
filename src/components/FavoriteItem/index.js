@@ -8,12 +8,17 @@ import {
   ActionContainer,
   DetailButton,
   DeleteButton,
+  BannerItem,
 } from "./styles";
 
 function FavoriteItem({ data, deleteMovie, navigatePage }) {
   return (
     <Container>
       <Title size={22}>{data.title}</Title>
+      <BannerItem
+        resizeMode="center"
+        source={{ uri: `https://image.tmdb.org/t/p/original/${data.poster_path}` }}
+      />
       <RateContainer>
         <Ionicons name="md-star" size={12} color="#E7A74E" />
         <Rate>{data.vote_average}/10</Rate>

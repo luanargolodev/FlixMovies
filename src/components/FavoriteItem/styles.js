@@ -42,3 +42,10 @@ export const DeleteButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;
+
+export const BannerItem = styled.Image`
+  margin-top: 10px;
+  width: 100%;
+  height: 170px;
+  border-radius: 8px;
+`;

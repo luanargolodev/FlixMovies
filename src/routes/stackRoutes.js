@@ -29,6 +29,7 @@ function StackRoutes() {
         name="Search"
         component={Search}
         options={{
+          headerBackTitleVisible: false,
           title: "Sua busca",
           headerTintColor: "#FFF",
           headerTitleStyle: {
