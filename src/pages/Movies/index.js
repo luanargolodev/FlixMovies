@@ -1,11 +1,59 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import Header from '../../components/Header';
+import { Container, ListMovies } from './styles';
+import { getMoviesSave, deleteMovie } from '../../utils/storage';
+import FavoriteItem from '../../components/FavoriteItem';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 function Movies() {
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    let isActive = true;
+    async function getFavoriteMovies() {
+      const result = await getMoviesSave('@movies');
+      if(isActive) {
+        setMovies(result);
+      }
+    }
+
+    if(isActive) {
+      getFavoriteMovies();
+    }
+
+    return () => {
+      isActive = false;
+    }
+
+  }, [isFocused])
+
+  async function handleDelete(id) {
+    const result = await deleteMovie('@movies', id);
+    setMovies(result);
+  }
+
+  function navigateDetailsPage(item) {
+    navigation.navigate('Detail', {id: item.id});
+  }
+
   return(
-    <View>
-      <Text>TELA Movies</Text>
-    </View>
+    <Container>
+      <Header title="Filmes assistidos"/>
+      <ListMovies
+        showsHorizontalScrollIndicator={false}
+        data={movies}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => (
+          <FavoriteItem 
+            data={item}
+            deleteMovie={handleDelete}
+            navigatePage={ () => navigateDetailsPage(item) }
+          />
+        )}
+      />
+    </Container>
   )
 }
 

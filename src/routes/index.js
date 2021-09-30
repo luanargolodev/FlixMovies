@@ -39,7 +39,7 @@ function Routes() {
         name="Movies"
         component={Movies}
         options={{
-          title: 'Meus filmes',
+          title: 'Filmes assistidos',
           drawerIcon: ({ focused, size, color }) => (
             <MaterialCommunityIcons 
               name={focused ? 'archive' : 'archive-outline'}

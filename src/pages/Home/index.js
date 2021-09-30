@@ -22,6 +22,7 @@ function Home() {
   const [popularMovies, setPopularMovies] = useState([]);
   const [topMovies, setTopMovies] = useState([]);
   const [bannerMovie, setBannerMovie] = useState({});
+  const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
@@ -81,7 +82,14 @@ function Home() {
     navigation.navigate('Detail', { id: item.id} );
   }
 
-  if (loading) {
+  function handleSearchMovie() {
+    if(input === '') return;
+
+    navigation.navigate('Search', { name: input });
+    setInput('');
+  }
+
+  if(loading) {
     return (
       <Container>
         <ActivityIndicator size="large" color="#FFF" />
@@ -96,8 +104,10 @@ function Home() {
         <Input
           placeholder="Ex: Um Ninja da Pesada"
           placeholderTextColor="#DDD"
+          value={input}
+          onChangeText={ (text) => setInput(text) }
         />
-        <SearchButton>
+        <SearchButton onPress={handleSearchMovie}>
           <Feather name="search" size={30} color="#FFF" />
         </SearchButton>
       </SearchContainer>

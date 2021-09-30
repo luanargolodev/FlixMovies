@@ -11,19 +11,21 @@ import {
   ListGenres,
   Description,
 } from "./styles";
-import { ScrollView, Modal } from 'react-native';
+import { ScrollView, Modal } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import api, { key } from "../../services/api";
 import Stars from "react-native-stars";
-import Genres from '../../components/Genres';
-import ModalLink from '../../components/ModalLink';
+import Genres from "../../components/Genres";
+import ModalLink from "../../components/ModalLink";
+import { saveMovie, hasMovie, deleteMovie } from '../../utils/storage';
 
 function Detail() {
   const navigation = useNavigation();
   const route = useRoute();
   const [movie, setMovie] = useState({});
   const [openLink, setOpenLink] = useState(false);
+  const [favoritedMovie, setFavoritedMovie] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -39,12 +41,14 @@ function Detail() {
           console.log(err);
         });
 
-      if (isActive) {
+      if(isActive) {
         setMovie(response.data);
+        const isFavorite = await hasMovie('@movies', response.data);
+        setFavoritedMovie(isFavorite);
       }
     }
 
-    if (isActive) {
+    if(isActive) {
       getMovie();
     }
 
@@ -53,14 +57,30 @@ function Detail() {
     };
   }, []);
 
+  async function handleFavoriteMovie(movie) {
+    if(favoritedMovie) {
+      await deleteMovie('@movies', movie.id);
+      setFavoritedMovie(false);
+      alert('Filme removido com sucesso!');
+    } else {
+      await saveMovie('@movies', movie);
+      setFavoritedMovie(true);
+      alert('Filme salvo com sucesso!');
+    }
+  }
+
   return (
     <Container>
       <Header>
         <HeaderButton activeOpacity="0.7" onPress={() => navigation.goBack()}>
           <Feather name="arrow-left" size={28} color="#FFF" />
         </HeaderButton>
-        <HeaderButton>
-          <Ionicons name="bookmark" size={28} color="#FFF" />
+        <HeaderButton onPress={() => handleFavoriteMovie(movie)}>
+          { favoritedMovie ? (
+            <Ionicons name="bookmark" size={28} color="#FFF" />
+          ) : 
+          <Ionicons name="bookmark-outline" size={28} color="#FFF" />
+          }
         </HeaderButton>
       </Header>
       <Banner
@@ -69,7 +89,7 @@ function Detail() {
           uri: `https://image.tmdb.org/t/p/original/${movie.poster_path}`,
         }}
       />
-      <ButtonLink onPress={ () => setOpenLink(true) }>
+      <ButtonLink onPress={() => setOpenLink(true)}>
         <Feather name="link" size={24} color="#FFF" />
       </ButtonLink>
       <Title numberOfLines={2}>{movie.title}</Title>
@@ -88,22 +108,22 @@ function Detail() {
         />
         <Rate>{movie.vote_average}/10</Rate>
       </ContentArea>
-      <ListGenres 
+      <ListGenres
         data={movie?.genres}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        keyExtractor={ (item) => String(item.id) }
-        renderItem={ ({ item }) => <Genres data={item} />}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => <Genres data={item} />}
       />
       <ScrollView showsHorizontalScrollIndicator={false}>
         <Title>Descrição</Title>
         <Description>{movie?.overview}</Description>
       </ScrollView>
       <Modal animationType="slide" transparent={true} visible={openLink}>
-        <ModalLink 
+        <ModalLink
           link={movie?.homepage}
           title={movie?.title}
-          closeModal={ () => setOpenLink(false) }
+          closeModal={() => setOpenLink(false)}
         />
       </Modal>
     </Container>
