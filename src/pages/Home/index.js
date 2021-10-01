@@ -99,7 +99,7 @@ function Home() {
 
   return (
     <Container>
-      <Header title="Filmes" />
+      <Header title="Biblioteca" />
       <SearchContainer>
         <Input
           placeholder="Ex: Um Ninja da Pesada"

@@ -25,7 +25,7 @@ function Routes() {
         name="HomeDrawer"
         component={StackRoutes}
         options={{
-          title: 'Home',
+          title: 'Biblioteca',
           drawerIcon: ({ focused, size, color }) => (
             <MaterialCommunityIcons 
               name={focused ? 'movie-open' : 'movie-outline'}

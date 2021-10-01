@@ -37,15 +37,27 @@ export const DetailButton = styled.TouchableOpacity`
 `;
 
 export const DeleteButton = styled.TouchableOpacity`
-  width: 15%;
-  height: 30px;
+  width: 23%;
+  height: 35px;
   justify-content: center;
   align-items: center;
 `;
 
+export const ContainerBanner = styled.TouchableOpacity`
+  justify-content: space-between;
+  flex-direction: row;
+`;
+
+export const Description = styled.Text`
+  color: #FFF;
+  padding: 16px;
+  color: #FFF;
+  line-height: 20px;
+`;
+
 export const BannerItem = styled.Image`
   margin-top: 10px;
-  width: 100%;
+  width: 30%;
   height: 170px;
   border-radius: 8px;
 `;
